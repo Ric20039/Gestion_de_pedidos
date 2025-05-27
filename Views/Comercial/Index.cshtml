@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Gestion_de_pedidos.Models.Comercial>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Comerciales</title>
+</head>
+<body>
+    <h1>Lista de Comerciales</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Ciudad</th>
+                <th>Comisión</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var comercial in Model)
+            {
+                <tr>
+                    <td>@comercial.Id</td>
+                    <td>@comercial.Nombre</td>
+                    <td>@comercial.Apellido1</td>
+                    <td>@comercial.Ciudad</td>
+                    <td>@comercial.Comision</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>

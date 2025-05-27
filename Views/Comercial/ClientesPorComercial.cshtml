@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Gestion_de_pedidos.Models.Cliente>
+
+<h2>Clientes del Comercial ID @ViewBag.ComercialId</h2>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Apellido1</th>
+            <th>Apellido2</th>
+            <th>Ciudad</th>
+            <th>Categoría</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cliente in Model)
+        {
+            <tr>
+                <td>@cliente.Id</td>
+                <td>@cliente.Nombre</td>
+                <td>@cliente.Apellido1</td>
+                <td>@cliente.Apellido2</td>
+                <td>@cliente.Ciudad</td>
+                <td>@cliente.Categoria</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index" class="btn btn-secondary">← Volver a Comerciales</a>

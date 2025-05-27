@@ -1,35 +1,115 @@
-﻿@model IEnumerable<Gestion_de_pedidos.Models.Comercial>
+﻿@model List<Gestion_de_pedidos.Models.Comercial>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>Comerciales</title>
-</head>
-<body>
-    <h1>Lista de Comerciales</h1>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Ciudad</th>
-                <th>Comisión</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var comercial in Model)
-            {
-                <tr>
-                    <td>@comercial.Id</td>
-                    <td>@comercial.Nombre</td>
-                    <td>@comercial.Apellido1</td>
-                    <td>@comercial.Ciudad</td>
-                    <td>@comercial.Comision</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</body>
-</html>
+@{
+    ViewData["Title"] = "Gestión de Comerciales";
+    var comercialForm = ViewBag.ComercialForm as Gestion_de_pedidos.Models.Comercial ?? new Gestion_de_pedidos.Models.Comercial();
+    var esEdicion = comercialForm.Id != 0;
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sección principal -->
+        <div class="col-md-9">
+            <h2 class="my-4">Gestión de Comerciales</h2>
+
+            <!-- Formulario -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    @if (esEdicion)
+                    {
+                        <strong>Editar Comercial</strong>
+                    }
+                    else
+                    {
+                        <strong>Agregar Comercial</strong>
+                    }
+                </div>
+                <div class="card-body">
+                    <form asp-action="@(esEdicion ? "Actualizar" : "Insertar")" method="post">
+                        <input type="hidden" name="Id" value="@comercialForm.Id" />
+
+                        <div class="mb-3">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" name="Nombre" value="@comercialForm.Nombre" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Apellido</label>
+                            <input type="text" name="Apellido" value="@comercialForm.Apellido1" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Comisión</label>
+                            <input type="number" step="0.01" name="Comision" value="@comercialForm.Comision" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Ciudad</label>
+                            <input type="text" name="Ciudad" value="@comercialForm.Ciudad" class="form-control" />
+                        </div>
+
+                        <button type="submit" class="btn btn-success">
+                            @(esEdicion ? "Actualizar Comercial" : "Agregar Comercial")
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tabla de Comerciales -->
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Comisión</th>
+                            <th>Ciudad</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var comercial in Model)
+                        {
+                            <tr>
+                                <td>@comercial.Nombre</td>
+                                <td>@comercial.Apellido1</td>
+                                <td>@comercial.Comision</td>
+                                <td>@comercial.Ciudad</td>
+                                <td class="text-center">
+                                    <form asp-action="Editar" method="post" class="d-inline">
+                                        <input type="hidden" name="Id" value="@comercial.Id" />
+                                        <button class="btn btn-warning btn-sm" type="submit">Editar</button>
+                                    </form>
+
+                                    <form asp-action="Eliminar" method="post" class="d-inline" onsubmit="return confirm('¿Seguro que deseas eliminar este comercial?');">
+                                        <input type="hidden" name="Id" value="@comercial.Id" />
+                                        <button class="btn btn-danger btn-sm" type="submit">Eliminar</button>
+                                    </form>
+
+                                    <form asp-action="ClientesPorComercial" method="post" class="d-inline">
+                                        <input type="hidden" name="IdComercial" value="@comercial.Id" />
+                                        <button asp-action="VerClientes" asp-route-id="@comercial.Id" class="btn btn-info btn-sm" type="submit">Ver Clientes</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Panel lateral derecho -->
+        <div class="col-md-3">
+            <div class="sticky-top" style="top: 20px;">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-secondary text-white">
+                        <strong>Consultas Especiales</strong>
+                    </div>
+                    <div class="card-body">
+                        <button class="btn btn-outline-primary w-100 mb-2">Top Comerciales</button>
+                        <button class="btn btn-outline-primary w-100 mb-2">Comerciales por Ciudad</button>
+                        <button class="btn btn-outline-primary w-100 mb-2">Comerciales con más ventas</button>
+                        <button class="btn btn-outline-primary w-100 mb-2">Comerciales activos</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

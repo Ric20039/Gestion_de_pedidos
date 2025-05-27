@@ -1,0 +1,58 @@
+﻿@model List<Gestion_de_pedidos.Models.Pedido>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Pedidos</title>
+    <link rel="stylesheet" href="~/styles.css">
+</head>
+<body>
+    <div class="layout">
+        <nav class="menu-lateral">
+            <a href="/comerciales" class="activo">👔 Comerciales</a>
+            <a href="/clientes">👥 Top ventas</a>
+            <a href="/pedidos">📦 Menos ventas</a>
+            <a href="/productos">📦 Productos estrella</a>
+        </nav>
+
+        <div class="container">
+            <h1>Pedidos</h1>
+
+            <form class="formulario" method="post" asp-controller="Pedidos" asp-action="Create">
+                <input type="number" name="Cantidad" placeholder="Cantidad" required />
+                <input type="date" name="Fecha" required />
+                <input type="number" name="Id_Cliente" placeholder="ID Cliente" required />
+                <input type="number" name="Id_Comercial" placeholder="ID Comercial" required />
+                <button type="submit">Agregar Pedido</button>
+            </form>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Cantidad</th>
+                        <th>Fecha</th>
+                        <th>ID Cliente</th>
+                        <th>ID Comercial</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var pedido in Model)
+                    {
+                        <tr>
+                            <td>@pedido.Id</td>
+                            <td>@pedido.Cantidad</td>
+                            <td>@pedido.Fecha.ToString("yyyy-MM-dd")</td>
+                            <td>@pedido.Id_Cliente</td>
+                            <td>@pedido.Id_Comercial</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <a href="/" class="volver">← Volver al inicio</a>
+        </div>
+    </div>
+</body>
+</html>

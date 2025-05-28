@@ -35,5 +35,18 @@ namespace Gestion_de_pedidos.Controllers
             return View("ClientesPorComercial", clientes);
         }
 
+        [HttpPost]
+        public IActionResult PedidosPorCliente(int clienteId)
+        {
+            var pedidos = _context.Pedido
+                .FromSqlRaw("EXEC sp_PedidosPorCliente @p0", clienteId)
+                .ToList();
+
+            ViewBag.ClienteId = clienteId;
+            return View("PedidosDelCliente", pedidos);
+        }
+
+
+
     }
 }

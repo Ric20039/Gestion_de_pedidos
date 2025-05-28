@@ -1,31 +1,40 @@
-﻿@model IEnumerable<Gestion_de_pedidos.Models.Cliente>
+﻿@model List<Gestion_de_pedidos.Models.Cliente>
 
-<h2>Clientes del Comercial ID @ViewBag.ComercialId</h2>
+@{
+    ViewData["Title"] = "Clientes del Comercial";
+}
 
-<table border="1">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Apellido1</th>
-            <th>Apellido2</th>
-            <th>Ciudad</th>
-            <th>Categoría</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var cliente in Model)
-        {
+<div class="container mt-4">
+    <h2>Clientes relacionados con el comercial: <strong>@ViewBag.NombreComercial</strong></h2>
+    <table class="table table-bordered mt-3">
+        <thead class="table-dark">
             <tr>
-                <td>@cliente.Id</td>
-                <td>@cliente.Nombre</td>
-                <td>@cliente.Apellido1</td>
-                <td>@cliente.Apellido2</td>
-                <td>@cliente.Ciudad</td>
-                <td>@cliente.Categoria</td>
+                <th>Nombre</th>
+                <th>Apellido 1</th>
+                <th>Apellido 2</th>
+                <th>Ciudad</th>
+                <th>Categoría</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var cliente in Model)
+            {
+                <tr>
+                    <td>@cliente.Nombre</td>
+                    <td>@cliente.Apellido1</td>
+                    <td>@cliente.Apellido2</td>
+                    <td>@cliente.Ciudad</td>
+                    <td>@cliente.Categoria</td>
+                    <td>
+                    <form asp-action="PedidosDelCliente" method="get" class="d-inline">
+                        <input type="hidden" name="id" value="@cliente.Id" />
+                        <button class="btn btn-info btn-sm" type="submit">Ver Pedidos</button>
+                    </form>
+                    </td>
 
-<a asp-action="Index" class="btn btn-secondary">← Volver a Comerciales</a>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Volver</a>
+</div>

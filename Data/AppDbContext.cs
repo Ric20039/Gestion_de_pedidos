@@ -38,5 +38,38 @@ namespace Gestion_de_pedidos.Data
         {
             Database.ExecuteSqlRaw("EXEC sp_eliminar_cliente @p0", id);
         }
+
+
+        // cambio el nombre id_comercial , etc
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Pedido>()
+                .HasOne(p => p.Comercial)
+                .WithMany() // o .WithMany(c => c.Pedidos) si tienes la colección en Comercial
+                .HasForeignKey(p => p.Id_Comercial)
+                .HasConstraintName("FK_Pedido_Comercial");
+
+            modelBuilder.Entity<Pedido>()
+                .HasOne(p => p.Cliente)
+                .WithMany() // o .WithMany(c => c.Pedidos)
+                .HasForeignKey(p => p.Id_Cliente)
+                .HasConstraintName("FK_Pedido_Cliente");
+
+            modelBuilder.Entity<DetallePedido>()
+                .HasOne(d => d.Producto)
+                .WithMany()
+                .HasForeignKey(d => d.IdProducto);
+
+            modelBuilder.Entity<DetallePedido>()
+                .HasOne(d => d.Pedido)
+                .WithMany(p => p.Detalles)
+                .HasForeignKey(d => d.IdPedido);
+        }
+
+
+
     }
 }

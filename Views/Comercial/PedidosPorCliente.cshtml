@@ -1,0 +1,49 @@
+﻿@model List<Gestion_de_pedidos.Models.Pedido>
+
+@{
+    ViewData["Title"] = "Pedidos del Cliente";
+}
+
+<div class="container mt-4">
+    <h2>Pedidos del Cliente</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning">Este cliente no tiene pedidos.</div>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID Pedido</th>
+                    <th>Fecha</th>
+                    <th>Comercial</th>
+                    <th>Detalles</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pedido in Model)
+                {
+                    <tr>
+                        <td>@pedido.Id</td>
+                        <td>@pedido.Fecha.ToShortDateString()</td>
+                        <td>@pedido.Comercial.Nombre @pedido.Comercial.Apellido1</td>
+                        <td>
+                            <ul>
+                                @foreach (var detalle in pedido.Detalles)
+                                {
+                                    <li>
+                                        Producto: @detalle.Producto.Nombre, Cantidad: @detalle.Cantidad, Precio: @detalle.Producto.PrecioUnitario.ToString("C")
+                                    </li>
+                                }
+                            </ul>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <a asp-action="VerClientes" asp-route-id="@Model.FirstOrDefault()?.Id_Cliente" class="btn btn-secondary">Volver</a>
+</div>

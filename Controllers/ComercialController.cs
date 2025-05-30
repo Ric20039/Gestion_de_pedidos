@@ -4,6 +4,10 @@ using Gestion_de_pedidos.Data;
 using Gestion_de_pedidos.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Data;
+using System.Data.SqlClient;
+using Gestion_de_pedidos.Models.ViewModels; // o donde tengas PedidoClienteViewModel
+
 
 namespace Gestion_de_pedidos.Controllers
 {
@@ -35,16 +39,30 @@ namespace Gestion_de_pedidos.Controllers
             return View("ClientesPorComercial", clientes);
         }
 
-        [HttpPost]
-        public IActionResult PedidosPorCliente(int clienteId)
+        public async Task<IActionResult> PedidosPorCliente(int clienteId)
         {
-            var pedidos = _context.Pedido
-                .FromSqlRaw("EXEC sp_PedidosPorCliente @p0", clienteId)
-                .ToList();
+            var pedidos = await _context.Pedido
+             .Where(p => p.Id_Cliente == clienteId)
+             .Include(p => p.Comercial)
+             .Include(p => p.Detalles)
+                 .ThenInclude(d => d.Producto)
+             .ToListAsync();
 
-            ViewBag.ClienteId = clienteId;
-            return View("PedidosDelCliente", pedidos);
+
+            if (pedidos == null || pedidos.Count == 0)
+            {
+                ViewBag.ClienteId = clienteId;
+                return View("PedidosPorCliente", new List<Pedido>()); // Pasamos lista vacía si no hay pedidos
+            }
+
+            return View("PedidosPorCliente", pedidos);
         }
+
+
+
+
+
+
 
 
 

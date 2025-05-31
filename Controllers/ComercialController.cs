@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Data;
 using System.Data.SqlClient;
 using Gestion_de_pedidos.Models.ViewModels; // o donde tengas PedidoClienteViewModel
+using Microsoft.Data.SqlClient;
 
 
 namespace Gestion_de_pedidos.Controllers
@@ -29,6 +30,7 @@ namespace Gestion_de_pedidos.Controllers
             return View(comerciales);
         }
 
+
         public async Task<IActionResult> VerClientes(int id)
         {
             var clientes = await _context.Cliente
@@ -38,6 +40,8 @@ namespace Gestion_de_pedidos.Controllers
             ViewBag.ComercialId = id;
             return View("ClientesPorComercial", clientes);
         }
+
+
 
         public async Task<IActionResult> PedidosPorCliente(int clienteId)
         {
@@ -58,6 +62,47 @@ namespace Gestion_de_pedidos.Controllers
             return View("PedidosPorCliente", pedidos);
         }
 
+
+        public IActionResult Agregar()
+        {
+            return View("Formulario", new Comercial());
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Insertar(Comercial comercial)
+        {
+            var parametros = new[]
+            {
+        new SqlParameter("@Nombre", comercial.Nombre ?? (object)DBNull.Value),
+        new SqlParameter("@Apellido1", comercial.Apellido1 ?? (object)DBNull.Value),
+        new SqlParameter("@Apellido2", comercial.Apellido2 ?? (object)DBNull.Value),
+        new SqlParameter("@Ciudad", comercial.Ciudad ?? (object)DBNull.Value),
+        new SqlParameter("@Comision", comercial.Comision ?? (object)DBNull.Value)
+    };
+
+            await _context.Database.ExecuteSqlRawAsync("EXEC sp_InsertarComercial @Nombre, @Apellido1, @Apellido2, @Ciudad, @Comision", parametros);
+
+            return RedirectToAction("Index");
+        }
+
+
+
+        [HttpPost]
+        public IActionResult Eliminar(int id)
+        {
+            using (var connection = new SqlConnection(_context.Database.GetConnectionString()))
+            using (var command = new SqlCommand("sp_EliminarComercial", connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@Id", id);
+
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+
+            return RedirectToAction("Index");
+        }
 
 
 

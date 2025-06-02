@@ -1,8 +1,67 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model Gestion_de_pedidos.Models.PanelViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+    <h2 class="mb-4">📊 Panel de control</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Clientes</h5>
+                    <p class="card-text fs-3">@Model.TotalClientes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Comerciales</h5>
+                    <p class="card-text fs-3">@Model.TotalComerciales</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Pedidos</h5>
+                    <p class="card-text fs-3">@Model.TotalPedidos</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Productos</h5>
+                    <p class="card-text fs-3">@Model.TotalProductos</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4>🕓 Últimos pedidos</h4>
+    <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>Comercial</th>
+                <th>Cantidad de productos</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pedido in Model.UltimosPedidos)
+            {
+                <tr>
+                    <td>@pedido.Fecha.ToString("yyyy-MM-dd")</td>
+                    <td>@pedido.Cliente</td>
+                    <td>@pedido.Comercial</td>
+                    <td>@pedido.CantidadProductos</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>

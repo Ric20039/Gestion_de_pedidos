@@ -18,5 +18,6 @@ namespace Gestion_de_pedidos.Models
 
         public ICollection<DetallePedido> Detalles { get; set; }
     }
+   
 
 }

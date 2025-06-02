@@ -16,6 +16,8 @@ namespace Gestion_de_pedidos.Data
         public DbSet<Producto> Producto { get; set; }
         public DbSet<DetallePedido> DetallePedido { get; set; }
 
+        public DbSet<PedidoResultado> PedidoResultado { get; set; }
+
         // MÉTODOS PARA CLIENTE USANDO SOLO Cliente
         public List<Cliente> ObtenerClientes()
         {
@@ -67,6 +69,10 @@ namespace Gestion_de_pedidos.Data
                 .HasOne(d => d.Pedido)
                 .WithMany(p => p.Detalles)
                 .HasForeignKey(d => d.IdPedido);
+
+            modelBuilder.Entity<PedidoResultado>().HasNoKey();
+
+            base.OnModelCreating(modelBuilder);
         }
 
 

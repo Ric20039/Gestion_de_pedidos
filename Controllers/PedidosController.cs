@@ -14,11 +14,41 @@ namespace Gestion_de_pedidos.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Index()
+        [HttpPost]
+        public async Task<IActionResult> Create(Pedido pedido)
         {
-            var pedidos = await _context.Pedido.ToListAsync();
-            return View("~/Views/Pedidos/Index.cshtml", pedidos);
+            if (ModelState.IsValid)
+            {
+                _context.Pedido.Add(pedido);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+
+            // En caso de error, recargar con los datos
+            var pedidos = _context.PedidoResultado.FromSqlRaw("EXEC sp_obtener_pedidos").ToList();
+
+            var viewModel = new PedidoViewModel
+            {
+                PedidoNuevo = pedido,
+                Pedidos = pedidos
+            };
+
+            return View("Index", viewModel);
         }
+        [HttpGet]
+        public IActionResult Index()
+        {
+            var pedidos = _context.PedidoResultado.FromSqlRaw("EXEC sp_obtener_pedidos").ToList();
+
+            var viewModel = new PedidoViewModel
+            {
+                PedidoNuevo = new Pedido(),
+                Pedidos = pedidos
+            };
+
+            return View(viewModel);
+        }
+
+
     }
 }

@@ -1,67 +1,82 @@
 ﻿@model Gestion_de_pedidos.Models.PanelViewModel
 
 @{
+    ViewData["Title"] = "Panel de control";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container mt-5">
-    <h2 class="mb-4">📊 Panel de control</h2>
+<div class="container py-5">
+    <h2 class="mb-4">📊 Panel de Control</h2>
 
-    <div class="row mb-4">
+    <div class="row g-4 mb-5">
         <div class="col-md-3">
-            <div class="card text-bg-primary">
-                <div class="card-body">
-                    <h5 class="card-title">Clientes</h5>
-                    <p class="card-text fs-3">@Model.TotalClientes</p>
+            <div class="card text-white bg-primary shadow h-100">
+                <div class="card-body d-flex align-items-center">
+                    <i class="bi bi-people-fill display-5 me-3"></i>
+                    <div>
+                        <h6 class="card-title">Clientes</h6>
+                        <p class="fs-4 mb-0">@Model.TotalClientes</p>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-bg-success">
-                <div class="card-body">
-                    <h5 class="card-title">Comerciales</h5>
-                    <p class="card-text fs-3">@Model.TotalComerciales</p>
+            <div class="card text-white bg-success shadow h-100">
+                <div class="card-body d-flex align-items-center">
+                    <i class="bi bi-person-badge-fill display-5 me-3"></i>
+                    <div>
+                        <h6 class="card-title">Comerciales</h6>
+                        <p class="fs-4 mb-0">@Model.TotalComerciales</p>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-bg-warning">
-                <div class="card-body">
-                    <h5 class="card-title">Pedidos</h5>
-                    <p class="card-text fs-3">@Model.TotalPedidos</p>
+            <div class="card text-white bg-warning shadow h-100">
+                <div class="card-body d-flex align-items-center">
+                    <i class="bi bi-cart-check-fill display-5 me-3"></i>
+                    <div>
+                        <h6 class="card-title">Pedidos</h6>
+                        <p class="fs-4 mb-0">@Model.TotalPedidos</p>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-bg-info">
-                <div class="card-body">
-                    <h5 class="card-title">Productos</h5>
-                    <p class="card-text fs-3">@Model.TotalProductos</p>
+            <div class="card text-white bg-info shadow h-100">
+                <div class="card-body d-flex align-items-center">
+                    <i class="bi bi-box-seam display-5 me-3"></i>
+                    <div>
+                        <h6 class="card-title">Productos</h6>
+                        <p class="fs-4 mb-0">@Model.TotalProductos</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <h4>🕓 Últimos pedidos</h4>
-    <table class="table table-bordered">
-        <thead class="table-light">
-            <tr>
-                <th>Fecha</th>
-                <th>Cliente</th>
-                <th>Comercial</th>
-                <th>Cantidad de productos</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var pedido in Model.UltimosPedidos)
-            {
+    <h4 class="mb-3">🕓 Últimos pedidos</h4>
+    <div class="table-responsive shadow-sm">
+        <table class="table table-bordered table-striped">
+            <thead class="table-light">
                 <tr>
-                    <td>@pedido.Fecha.ToString("yyyy-MM-dd")</td>
-                    <td>@pedido.Cliente</td>
-                    <td>@pedido.Comercial</td>
-                    <td>@pedido.CantidadProductos</td>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Comercial</th>
+                    <th>Cantidad de productos</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var pedido in Model.UltimosPedidos)
+                {
+                    <tr>
+                        <td>@pedido.Fecha.ToString("yyyy-MM-dd")</td>
+                        <td>@pedido.Cliente</td>
+                        <td>@pedido.Comercial</td>
+                        <td>@pedido.CantidadProductos</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>

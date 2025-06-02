@@ -13,7 +13,9 @@ namespace Gestion_de_pedidos.Data
         public DbSet<Comercial> Comercial { get; set; }
         public DbSet<Cliente> Cliente { get; set; }
         public DbSet<Pedido> Pedido { get; set; }
-        public DbSet<Producto> Producto { get; set; }
+        //public DbSet<Producto> Producto { get; set; }
+        public DbSet<Producto> Productos { get; set; }
+
         public DbSet<DetallePedido> DetallePedido { get; set; }
 
         public DbSet<PedidoResultado> PedidoResultado { get; set; }

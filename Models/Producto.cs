@@ -1,20 +1,23 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-[Table("producto")]
-public class Producto
+namespace Gestion_de_pedidos.Models
 {
-    [Column("id")] // ← CAMBIADO de "id_producto" a "id"
-    public int Id { get; set; }
+    [Table("producto")]
+    public class Producto
+    {
+        [Column("id")]
+        public int Id { get; set; }
 
-    [Column("nombre")]
-    public string Nombre { get; set; }
+        [Column("nombre")]
+        public string Nombre { get; set; }
 
-    [Column("descripcion")]
-    public string Descripcion { get; set; }
+        [Column("descripcion")]
+        public string Descripcion { get; set; }
 
-    [Column("precio_unitario")]
-    public double PrecioUnitario { get; set; }
+        [Column("precio_unitario")]
+        public double PrecioUnitario { get; set; }
 
-    [Column("stock")]
-    public int Stock { get; set; }
+        [Column("stock")]
+        public int Stock { get; set; }
+    }
 }

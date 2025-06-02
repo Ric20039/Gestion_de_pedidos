@@ -24,7 +24,7 @@ public class HomeController : Controller
             TotalClientes = _context.Cliente.Count(),
             TotalComerciales = _context.Comercial.Count(),
             TotalPedidos = _context.Pedido.Count(),
-            TotalProductos = _context.Productos.Count(),
+            TotalProductos = _context.Producto.Count(),
 
             UltimosPedidos = _context.Pedido
                 .OrderByDescending(p => p.Fecha)

@@ -90,4 +90,22 @@ public class ClienteController : Controller
 
         return View("Index", clientes);
     }
+    public async Task<IActionResult> ClientesPorCategoria()
+    {
+        var resultado = await _context.ClientesPorCategoriaDTO
+            .FromSqlRaw("EXEC sp_ClientesPorCategoria")
+            .ToListAsync();
+
+        ViewBag.Titulo = "Clientes por Categoría";
+        return View("ClientesPorCategoria", resultado); // Crearás esta vista a continuación
+    }
+    public async Task<IActionResult> ClientesPorCiudad()
+    {
+        var clientes = await _context.ClientesPorCiudadDTO
+            .FromSqlRaw("EXEC sp_ClientesPorCiudad")
+            .ToListAsync();
+
+        ViewBag.Titulo = "Clientes por Ciudad";
+        return View("ClientesPorCiudad", clientes); // Usa una vista distinta
+    }
 }

@@ -1,0 +1,21 @@
+﻿@model List<Gestion_de_pedidos.Models.DTO.ClientesPorCiudadDTO>
+
+<h2>@ViewBag.Titulo</h2>
+
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Ciudad</th>
+            <th>Cantidad de Clientes</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Ciudad</td>
+                <td>@item.Cantidad</td>
+            </tr>
+        }
+    </tbody>
+</table>

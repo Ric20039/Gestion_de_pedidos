@@ -1,4 +1,5 @@
 ﻿using Gestion_de_pedidos.Models;
+using Gestion_de_pedidos.Models.DTO;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,8 @@ namespace Gestion_de_pedidos.Data
         public DbSet<DetallePedido> DetallePedido { get; set; }
 
         public DbSet<PedidoResultado> PedidoResultado { get; set; }
-
+        public DbSet<ClientesPorCategoriaDTO> ClientesPorCategoriaDTO { get; set; }
+        public DbSet<ClientesPorCiudadDTO> ClientesPorCiudadDTO { get; set; }
         // MÉTODOS PARA CLIENTE USANDO SOLO Cliente
         public List<Cliente> ObtenerClientes()
         {
@@ -76,6 +78,14 @@ namespace Gestion_de_pedidos.Data
             modelBuilder.Entity<PedidoResultado>().HasNoKey();
 
             base.OnModelCreating(modelBuilder);
+
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<ClientesPorCategoriaDTO>().HasNoKey();
+
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<ClientesPorCiudadDTO>().HasNoKey(); // Necesario porque es una consulta sin PK
         }
 
 

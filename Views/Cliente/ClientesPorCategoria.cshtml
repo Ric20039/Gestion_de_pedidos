@@ -1,0 +1,24 @@
+﻿@model List<Gestion_de_pedidos.Models.DTO.ClientesPorCategoriaDTO>
+@{
+    ViewData["Title"] = "Clientes por Categoría";
+}
+
+<h3 class="mb-4">Clientes por Categoría</h3>
+
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Categoría</th>
+            <th>Cantidad</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Categoria</td>
+                <td>@item.Cantidad</td>
+            </tr>
+        }
+    </tbody>
+</table>

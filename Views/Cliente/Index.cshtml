@@ -128,8 +128,12 @@
                         <strong>Consultas Especializadas</strong>
                     </div>
                     <div class="card-body">
-                        <button class="btn btn-outline-primary w-100 mb-2">Clientes por Ciudad</button>
-                        <button class="btn btn-outline-primary w-100 mb-2">Clientes por Categoría</button>
+                        <form asp-action="ClientesPorCiudad" method="get">
+                            <button type="submit" class="btn btn-outline-primary w-100 mb-2">Clientes por Ciudad</button>
+                        </form>
+                        <form action="Cliente/ClientesPorCategoria" method="get">
+                            <button type="submit" class="btn btn-outline-primary w-100 mb-2">Clientes por Categoría</button>
+                        </form>
                         <button class="btn btn-outline-primary w-100 mb-2">Top Clientes</button>
                         <button class="btn btn-outline-primary w-100 mb-2">Clientes Inactivos</button>
                         <!-- Puedes agregar más botones después -->

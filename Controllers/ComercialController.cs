@@ -1,115 +1,118 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Gestion_de_pedidos.Data;
+﻿using Gestion_de_pedidos.Data;
 using Gestion_de_pedidos.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Data;
-using System.Data.SqlClient;
-using Gestion_de_pedidos.Models.ViewModels; // o donde tengas PedidoClienteViewModel
-using Microsoft.Data.SqlClient;
+using System.Linq;
 
-
-namespace Gestion_de_pedidos.Controllers
+public class ComercialController : Controller
 {
-    public class ComercialController : Controller
+    private readonly AppDbContext _context;
+
+    public ComercialController(AppDbContext context)
     {
-        private readonly AppDbContext _context;
+        _context = context;
+    }
 
-        public ComercialController(AppDbContext context)
+    // Mostrar todos los comerciales
+    public IActionResult Index()
+    {
+        var comerciales = _context.Comercial.FromSqlRaw("EXEC sp_obtener_comerciales").ToList();
+        ViewBag.ComercialForm = new Comercial(); // formulario vacío
+        return View(comerciales);
+    }
+
+    [HttpPost]
+    public IActionResult Insertar(Comercial comercial)
+    {
+        if (comercial.Id == 0)
         {
-            _context = context;
-        }
-
-        public async Task<IActionResult> Index()
-        {
-            var comerciales = await _context.Comercial
-                .FromSqlRaw("EXEC sp_ObtenerComerciales")
-                .ToListAsync();
-
-            return View(comerciales);
-        }
-
-
-        public async Task<IActionResult> VerClientes(int id)
-        {
-            var clientes = await _context.Cliente
-                .FromSqlRaw("EXEC sp_ObtenerClientesPorComercial @p0", id)
-                .ToListAsync();
-
-            ViewBag.ComercialId = id;
-            return View("ClientesPorComercial", clientes);
-        }
-
-
-
-        public async Task<IActionResult> PedidosPorCliente(int clienteId)
-        {
-            var pedidos = await _context.Pedido
-             .Where(p => p.Id_Cliente == clienteId)
-             .Include(p => p.Comercial)
-             .Include(p => p.Detalles)
-                 .ThenInclude(d => d.Producto)
-             .ToListAsync();
-
-
-            if (pedidos == null || pedidos.Count == 0)
+            if (ModelState.IsValid)
             {
-                ViewBag.ClienteId = clienteId;
-                return View("PedidosPorCliente", new List<Pedido>()); // Pasamos lista vacía si no hay pedidos
+                _context.Database.ExecuteSqlRaw(
+                    "EXEC sp_insertar_comercial @p0, @p1, @p2, @p3, @p4",
+                    comercial.Nombre, comercial.Apellido1, comercial.Apellido2,
+                    comercial.Comision, comercial.Ciudad
+                );
+                return RedirectToAction("Index");
             }
-
-            return View("PedidosPorCliente", pedidos);
+        }
+        else
+        {
+            // si tiene ID, actualiza
+            return Actualizar(comercial);
         }
 
+        var comerciales = _context.Comercial.FromSqlRaw("EXEC sp_obtener_comerciales").ToList();
+        ViewBag.ComercialForm = comercial;
+        return View("Index", comerciales);
+    }
 
-        public IActionResult Agregar()
+    [HttpPost]
+    public IActionResult Actualizar(Comercial comercial)
+    {
+        if (ModelState.IsValid)
         {
-            return View("Formulario", new Comercial());
-        }
-
-
-        [HttpPost]
-        public async Task<IActionResult> Insertar(Comercial comercial)
-        {
-            var parametros = new[]
-            {
-        new SqlParameter("@Nombre", comercial.Nombre ?? (object)DBNull.Value),
-        new SqlParameter("@Apellido1", comercial.Apellido1 ?? (object)DBNull.Value),
-        new SqlParameter("@Apellido2", comercial.Apellido2 ?? (object)DBNull.Value),
-        new SqlParameter("@Ciudad", comercial.Ciudad ?? (object)DBNull.Value),
-        new SqlParameter("@Comision", comercial.Comision ?? (object)DBNull.Value)
-    };
-
-            await _context.Database.ExecuteSqlRawAsync("EXEC sp_InsertarComercial @Nombre, @Apellido1, @Apellido2, @Ciudad, @Comision", parametros);
+            _context.Database.ExecuteSqlRaw(
+                "EXEC sp_actualizar_comercial @p0, @p1, @p2, @p3, @p4, @p5",
+                comercial.Id, comercial.Nombre, comercial.Apellido1, comercial.Apellido2,
+                comercial.Ciudad, comercial.Comision
+            );
 
             return RedirectToAction("Index");
         }
 
+        var comerciales = _context.Comercial.FromSqlRaw("EXEC sp_obtener_comerciales").ToList();
+        ViewBag.ComercialForm = comercial;
+        return View("Index", comerciales);
+    }
+
+    public IActionResult Editar(int id)
+    {
+        var comercial = _context.Comercial.FirstOrDefault(c => c.Id == id);
+        var comerciales = _context.Comercial.ToList();
+
+        ViewBag.ComercialForm = comercial;
+        return View("Index", comerciales);
+    }
+
+    [HttpPost]
+    public IActionResult Eliminar(int id)
+    {
+        _context.Database.ExecuteSqlRaw("EXEC sp_eliminar_comercial @p0", id);
+        return RedirectToAction("Index");
+    }
+
+    [HttpPost]
+    public IActionResult ClientesPorComercial(int IdComercial)
+    {
+        var clientes = _context.Cliente
+            .FromSqlRaw("EXEC sp_ObtenerClientesPorComercial @p0", IdComercial)
+            .ToList();
+
+        var comercial = _context.Comercial.FirstOrDefault(c => c.Id == IdComercial);
+        ViewBag.NombreComercial = comercial != null
+            ? $"{comercial.Nombre} {comercial.Apellido1} {comercial.Apellido2}"
+            : "Desconocido";
+
+        return View("ClientesPorComercial", clientes);
+    }
+    public async Task<IActionResult> PedidosPorCliente(int clienteId)
+    {
+        var pedidos = await _context.Pedido
+         .Where(p => p.Id_Cliente == clienteId)
+         .Include(p => p.Comercial)
+         .Include(p => p.Detalles)
+             .ThenInclude(d => d.Producto)
+         .ToListAsync();
 
 
-        [HttpPost]
-        public IActionResult Eliminar(int id)
+        if (pedidos == null || pedidos.Count == 0)
         {
-            using (var connection = new SqlConnection(_context.Database.GetConnectionString()))
-            using (var command = new SqlCommand("sp_EliminarComercial", connection))
-            {
-                command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.AddWithValue("@Id", id);
-
-                connection.Open();
-                command.ExecuteNonQuery();
-            }
-
-            return RedirectToAction("Index");
+            ViewBag.ClienteId = clienteId;
+            return View("PedidosPorCliente", new List<Pedido>()); // Pasamos lista vacía si no hay pedidos
         }
 
-
-
-
-
-
-
-
+        return View("PedidosPorCliente", pedidos);
     }
 }

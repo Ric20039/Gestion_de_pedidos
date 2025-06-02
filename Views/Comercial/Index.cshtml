@@ -34,8 +34,13 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Apellido</label>
-                            <input type="text" name="Apellido" value="@(comercialForm.Apellido1 ?? "")" class="form-control" />
+                            <label class="form-label">Primer Apellido</label>
+                            <input type="text" name="Apellido1" value="@(comercialForm.Apellido1 ?? "")" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Segundo Apellido</label>
+                            <input type="text" name="Apellido2" value="@(comercialForm.Apellido2 ?? "")" class="form-control" />
                         </div>
 
                         <div class="mb-3">
@@ -55,8 +60,6 @@
                         </button>
                     </form>
                 </div>
-
-
             </div>
 
             <!-- Tabla de Comerciales -->
@@ -65,7 +68,8 @@
                     <thead class="table-dark">
                         <tr>
                             <th>Nombre</th>
-                            <th>Apellido</th>
+                            <th>Primer Apellido</th>
+                            <th>Segundo Apellido</th>
                             <th>Comisión</th>
                             <th>Ciudad</th>
                             <th class="text-center">Acciones</th>
@@ -77,13 +81,11 @@
                             <tr>
                                 <td>@comercial.Nombre</td>
                                 <td>@comercial.Apellido1</td>
-                                <td>@comercial.Comision</td>
-                                <td>@comercial.Ciudad</td>
+                                <td>@(comercial.Apellido2 ?? "-")</td>
+                                <td>@(comercial.Comision.HasValue ? comercial.Comision.Value.ToString("F2") : "-")</td>
+                                <td>@(comercial.Ciudad ?? "-")</td>
                                 <td class="text-center">
-                                    <form asp-action="Editar" method="post" class="d-inline">
-                                        <input type="hidden" name="Id" value="@comercial.Id" />
-                                        <button class="btn btn-warning btn-sm" type="submit">Editar</button>
-                                    </form>
+                                    <a asp-action="Editar" asp-route-id="@comercial.Id" class="btn btn-warning btn-sm">Editar</a>
 
                                     <form asp-action="Eliminar" method="post" class="d-inline" onsubmit="return confirm('¿Seguro que deseas eliminar este comercial?');">
                                         <input type="hidden" name="Id" value="@comercial.Id" />
@@ -92,12 +94,14 @@
 
                                     <form asp-action="ClientesPorComercial" method="post" class="d-inline">
                                         <input type="hidden" name="IdComercial" value="@comercial.Id" />
-                                        <button asp-action="VerClientes" asp-route-id="@comercial.Id" class="btn btn-info btn-sm" type="submit">Ver Clientes</button>
+                                        <button class="btn btn-info btn-sm" type="submit">Ver Clientes</button>
                                     </form>
+
                                 </td>
                             </tr>
                         }
                     </tbody>
+
                 </table>
             </div>
         </div>

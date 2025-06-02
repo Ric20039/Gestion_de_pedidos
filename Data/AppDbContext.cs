@@ -11,9 +11,10 @@ namespace Gestion_de_pedidos.Data
             : base(options) { }
 
         public DbSet<Comercial> Comercial { get; set; }
+        
         public DbSet<Cliente> Cliente { get; set; }
         public DbSet<Pedido> Pedido { get; set; }
-        //public DbSet<Producto> Producto { get; set; }
+        
         public DbSet<Producto> Producto { get; set; }
 
         public DbSet<DetallePedido> DetallePedido { get; set; }

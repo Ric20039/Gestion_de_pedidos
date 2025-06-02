@@ -108,6 +108,10 @@
                                         <input type="hidden" name="id" value="@cliente.Id" />
                                         <button class="btn btn-danger btn-sm" type="submit">Eliminar</button>
                                     </form>
+                                    <form action="/Comercial/PedidosPorCliente" method="get">
+                                        <input type="hidden" name="clienteId" value="@cliente.Id" />
+                                        <button type="submit" class="btn btn-info">Ver Pedidos</button>
+                                    </form>
                                 </td>
                             </tr>
                         }
